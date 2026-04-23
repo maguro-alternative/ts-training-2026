@@ -1,0 +1,23 @@
+{
+  "name": "ts-training-day3",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "TypeScript training - Day 3 exercise repository",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "sh -c 'EXERCISE=\"$1\" vitest run --reporter=default --reporter=json --outputFile.json=public/test-results.json \"$@\"' --",
+    "test:watch": "vitest --reporter=default --reporter=json --outputFile.json=public/test-results.json",
+    "test:ui": "vitest --ui",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@vitest/ui": "^2.1.8",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}
