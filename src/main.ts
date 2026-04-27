@@ -1,7 +1,14 @@
-// 進捗表示ページ: public/test-results.json を読んで各課題の状態を表示する
+// 進捗表示ページ + 講義資料ビューア
+//
+// ルーティング (hash):
+//   #/                      → 進捗ページ (デフォルト)
+//   #/lectures              → 講義一覧
+//   #/lectures/<slug>       → 個別の講義
 //
 // npm test を実行すると JSON が更新されるので、このページを再読み込み
 // (または "進捗を更新" ボタンをクリック) すると最新の状態が反映される。
+
+import { renderLectures } from './lectures';
 
 const EXERCISES = [
   { id: '01-basic-types', title: '基本型を付ける', difficulty: '★☆☆' },
@@ -99,7 +106,10 @@ function render(statsMap: Record<ExerciseId, ExerciseStats>, report: VitestJsonR
   if (!app) return;
 
   app.innerHTML = `
-    <div class="eyebrow">TypeScript研修 · Day 3</div>
+    <div class="topbar">
+      <div class="eyebrow">TypeScript研修 · Day 3</div>
+      <a class="topbar-link" href="#/lectures">📚 講義資料を見る →</a>
+    </div>
     <h1>型で <em>守る</em> 一日。</h1>
     <p class="subtitle">
       用意された8つの課題を順に解いていきましょう。<br/>
@@ -185,6 +195,28 @@ async function refresh() {
   render(stats, report);
 }
 
-refresh();
-// 3秒ごとに自動更新 (test:watch と併用したいとき用)
-setInterval(refresh, 3000);
+// hash ベースのルーティング
+//   #/                → 進捗ページ
+//   #/lectures        → 講義一覧
+//   #/lectures/<slug> → 個別講義
+function route() {
+  const hash = window.location.hash.replace(/^#/, '');
+  const parts = hash.split('/').filter(Boolean);
+
+  if (parts[0] === 'lectures') {
+    renderLectures(parts[1]);
+    return;
+  }
+
+  // デフォルト: 進捗ページ
+  refresh();
+}
+
+window.addEventListener('hashchange', route);
+route();
+
+// 進捗ページ表示中だけ自動更新したいので、route() 経由で常に再実行
+// (講義ページ表示中は refresh() の結果が捨てられるだけなので実害なし)
+setInterval(() => {
+  if (!window.location.hash.startsWith('#/lectures')) refresh();
+}, 3000);
