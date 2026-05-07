@@ -193,7 +193,7 @@ function pick</* TODO */>(obj: T, key: K): /* TODO */ {
 const jojo = { name: "Jonathan Joestar", age: 19 };
 const name = pick(jojo, "name");   // name: string
 const age = pick(jojo, "age");     // age: number
-// pick(jojo, "stand");            // ❌ "email" は存在しない
+// pick(jojo, "stand");            // ❌ "stand" は存在しない
 
 // 4. 2つのオブジェクトをマージ
 function merge</* TODO */>(a: A, b: B): A & B {
