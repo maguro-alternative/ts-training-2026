@@ -204,7 +204,7 @@ type Member = "mirai" | "shizuka" | "tsubasa";
 type Attribute = "Princess" | "Fairy" | "Angel"
 
 function attribute(member: Member): Attribute {
-  switch (tier) {
+  switch (member) {
     case "mirai": return "Princess";
     case "shizuka": return "Fairy";
     case "tsubasa": return "Angel";
