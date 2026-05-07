@@ -223,7 +223,7 @@ function mymap</* TODO */>(arr: T[], fn: (x: T) => U): U[] {
 }
 
 const upper = mymap(["a", "b"], (s) => s.toUpperCase());  // string[]
-const lens = mymap(["abc", "de"], (s) => s.length);       // number[]
+const lens = mymap(["jo", "jo"], (s) => s.length);       // number[]
 
 // 3. 「2つの配列を zip する」関数
 //    zip([1, 2], ["a", "b"]) → [[1, "a"], [2, "b"]]
