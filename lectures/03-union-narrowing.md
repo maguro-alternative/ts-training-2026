@@ -1,7 +1,5 @@
 # 03. ユニオン型と絞り込み (narrowing)
 
-> Day 1 午後 / 講義 50 分 + ミニ演習 30 分 / 対応する Day3 課題: 02
-
 ## ゴール
 
 - ユニオン型 (`A | B`) とリテラル型を書ける
@@ -35,15 +33,16 @@ function len(x: string | string[]) {
 ## リテラル型
 
 ```ts
-type Tier = "gold" | "silver" | "bronze";
+type Member = "mirai" | "shizuka" | "tsubasa";
+type Attribute = "Princess" | "Fairy" | "Angel"
 
-function discount(tier: Tier): number {
-  if (tier === "gold") return 0.1;
-  if (tier === "silver") return 0.05;
-  return 0;
+function attribute(member: Member): Attribute {
+  if (member === "mirai") return "Princess";
+  if (member === "shizuka") return "Fairy";
+  return "Angel";
 }
 
-discount("platinum"); // ❌ Tier に存在しない
+discount("tsumugi"); // ❌ Member に存在しない
 ```
 
 文字列ユニオンは **enum の代わり** によく使います。
@@ -51,6 +50,7 @@ discount("platinum"); // ❌ Tier に存在しない
 ## 絞り込みの手段
 
 ### typeof
+型を調べることができます。
 
 ```ts
 function format(x: string | number): string {
@@ -64,16 +64,17 @@ function format(x: string | number): string {
 `typeof` で絞り込めるのは **プリミティブ型**: `"string" | "number" | "boolean" | "undefined" | "object" | "function" | "symbol" | "bigint"`
 
 ### in
+プロパティ名の有無を調べられます。
 
 ```ts
-type Cat = { purrs: boolean; name: string };
-type Dog = { barks: boolean; name: string };
+type UnicornGundam = { hyperMegaRancher: boolean; name: string };
+type ΞGundam = { funnelMissile: boolean; name: string };
 
-function describe(animal: Cat | Dog) {
-  if ("purrs" in animal) {
-    return animal.purrs;   // animal: Cat
+function describe(gundam: UnicornGundam | ΞGundam) {
+  if ("hyperMegaRancher" in gundam) {
+    return gundam.hyperMegaRancher;   // gundam: UnicornGundam
   }
-  return animal.barks;     // animal: Dog
+  return gundam.funnelMissile;     // gundam: ΞGundam
 }
 ```
 
@@ -182,7 +183,44 @@ Type '{ status: "idle" }' is not assignable to type 'never'.
 
 → 「すべてのケースを処理し忘れている」とコンパイラが教えてくれる。これが **網羅性チェック** です。
 
-## ミニ演習 (30 分)
+## 演習 (120 分)
+
+### Part A — 写経 + typeof / in による絞り込み (25 分)
+
+```ts
+// 1. typeof で string と number を絞り込む
+function format(x: string | number): string {
+  if (typeof x === "string") {
+    return x.toUpperCase();   // x: string
+  }
+  return x.toFixed(2);        // x: number
+}
+
+console.log(format("hello"));
+console.log(format(3.14));
+
+// 2. リテラル型ユニオンと switch
+type Tier = "gold" | "silver" | "bronze";
+
+function discount(tier: Tier): number {
+  switch (tier) {
+    case "gold": return 0.1;
+    case "silver": return 0.05;
+    case "bronze": return 0;
+  }
+}
+
+// 3. in で絞り込み
+type Cat = { purrs: boolean; name: string };
+type Dog = { barks: boolean; name: string };
+
+function speak(animal: Cat | Dog): string {
+  if ("purrs" in animal) return `${animal.name} purrs`;
+  return `${animal.name} barks`;
+}
+```
+
+### Part B — Discriminated Union と網羅性チェック (60 分)
 
 ```ts
 // 1. 図形の面積を計算する関数を Discriminated Union で書く
@@ -196,7 +234,67 @@ function area(shape: Shape): number {
 }
 
 // 2. 上記に { kind: "triangle"; base: number; height: number } を追加
-//    コンパイルエラーが出ることを確認、修正する
+//    → default の never チェックでコンパイルエラーが出ることを確認
+//    → area 関数を修正してエラーを解消
+
+// 3. 非同期データ取得の状態を Discriminated Union で表現
+type FetchState<T> =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; data: T }
+  | { status: "failure"; error: string };
+
+// FetchState<User> を受け取って表示用の文字列を返す関数
+type User = { id: string; name: string };
+
+function render(state: FetchState<User>): string {
+  /* TODO: switch + 網羅性チェックで書く
+     idle    → "(まだ取得していません)"
+     loading → "Loading..."
+     success → state.data.name を含む文字列
+     failure → state.error を含む文字列
+  */
+}
+
+// 4. ボタンクリックのイベント型 (Discriminated Union で表現)
+type UiEvent =
+  | { type: "click"; x: number; y: number }
+  | { type: "keypress"; key: string }
+  | { type: "scroll"; deltaY: number };
+
+// 上のいずれが来ても安全に処理する関数を書く
+function handle(e: UiEvent): string {
+  /* TODO */
+}
+```
+
+### Part C — ユーザー定義型ガード (35 分)
+
+```ts
+// 1. unknown を string[] に絞り込む型ガードを書く
+function isStringArray(x: unknown): x is string[] {
+  /* TODO */
+}
+
+const v: unknown = ["a", "b", "c"];
+if (isStringArray(v)) {
+  v.forEach((s) => console.log(s.toUpperCase()));  // v: string[]
+}
+
+// 2. unknown を Cat に絞り込む型ガード
+type Cat2 = { kind: "cat"; name: string; purrs: boolean };
+
+function isCat(x: unknown): x is Cat2 {
+  /* TODO: object チェック → null チェック → kind プロパティ確認 */
+}
+
+// 3. fetch のレスポンス的な雰囲気の検証
+//    json: unknown が { id: string; name: string } の形か検証する型ガードを書く
+type UserDto = { id: string; name: string };
+
+function isUserDto(x: unknown): x is UserDto {
+  /* TODO */
+}
 ```
 
 ## 講師向けメモ
