@@ -11,7 +11,7 @@
 ```ts
 const name: string = "Chihaya Kisaragi";
 const age: number = 16;
-const isAdmin: boolean = false;
+const isIdol: boolean = true;
 const nothing: null = null;
 const notYet: undefined = undefined;
 ```
@@ -46,11 +46,11 @@ let back = "shizuka";    // 推論: string
 
 ```ts
 const ids: number[] = [1, 2, 3];
-const names: Array<string> = ["A", "B"];   // 別の書き方
+const names: Array<string> = ["Haruka Amami", "Chihaya Kisaragi"];   // 別の書き方
 
 // タプル: 長さと型を固定
 const point: [number, number] = [10, 20];
-const entry: [string, number] = ["age", 25];
+const entry: [string, number] = ["Chihaya Kisaragi", 16];
 ```
 
 `number[]` と `[number, number]` の違い:
@@ -110,9 +110,9 @@ if (typeof y === "string") {
 - `any` は 「型チェックを諦める」 = TS をやる意味がない
 - 外部から来るデータは `unknown` で受けて、検証してから使う
 
-## 演習 (60 分)
+## 演習
 
-### Part A — 写経 + 動作確認 (15 分)
+### Part A — 写経 + 動作確認
 
 ファイル: 任意の `.ts` ファイル (`scratch.ts` など作って試してください)
 
@@ -125,10 +125,10 @@ const age: number = 16;
 // const flag: boolean = 0;    // ❌
 
 // 2. 型推論を確認 (VSCode で変数にホバー)
-const n = 42;          // ホバー → ?
-let m = 42;            // ホバー → ?
-const t = "gold";      // ホバー → ?
-let s = "gold";        // ホバー → ?
+const n = 42;                 // ホバー → ?
+let m = 42;                   // ホバー → ?
+const t = "eternal harmony";  // ホバー → ?
+let s = "my song";            // ホバー → ?
 
 // 3. 関数の引数・戻り値型
 function add(a: number, b: number): number {
@@ -137,7 +137,7 @@ function add(a: number, b: number): number {
 console.log(add(1, 2));
 ```
 
-### Part B — 自分で型を付ける (35 分)
+### Part B — 自分で型を付ける
 
 ```ts
 // 1. 文字列を受け取って大文字にして返す関数
