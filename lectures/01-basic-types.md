@@ -33,8 +33,8 @@ name = "Chihaya Kisaragi";
 ## let と const の推論差
 
 ```ts
-const tier = "gold";   // 推論: "gold" (リテラル型)
-let tier2 = "gold";    // 推論: string
+const center = "mirai";   // 推論: "mirai" (リテラル型)
+let back = "shizuka";    // 推論: string
 ```
 
 - `const` は値が変わらないので **リテラル型** に推論される
