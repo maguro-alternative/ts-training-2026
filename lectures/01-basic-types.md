@@ -1,7 +1,5 @@
 # 01. 基本型
 
-> Day 1 午前 / 講義 40 分 + ミニ演習 20 分 / 対応する Day3 課題: 01
-
 ## ゴール
 
 - プリミティブ型 / 配列 / タプル を書き分けられる
@@ -11,8 +9,8 @@
 ## プリミティブ型
 
 ```ts
-const name: string = "Taro";
-const age: number = 25;
+const name: string = "Chihaya Kisaragi";
+const age: number = 16;
 const isAdmin: boolean = false;
 const nothing: null = null;
 const notYet: undefined = undefined;
@@ -21,15 +19,15 @@ const notYet: undefined = undefined;
 実務では明示的に書かず、**推論に任せる** ことが多いです:
 
 ```ts
-const name = "Taro";   // 推論: string
-let age = 25;          // 推論: number
+const name: string = "Chihaya Kisaragi";    // 推論: string
+let age = 16;                               // 推論: number
 ```
 
 ただし「初期値はないが型は決めたい」ときは明示します:
 
 ```ts
 let name: string;      // まだ未代入
-name = "Taro";
+name = "Chihaya Kisaragi";
 ```
 
 ## let と const の推論差
@@ -75,7 +73,7 @@ function add(a: number, b: number): number {
 // アロー関数
 const mul = (a: number, b: number): number => a * b;
 
-// 戻り値型は推論されるので省略可 (公開APIでは明示推奨)
+// 戻り値型は推論されるので省略可 (明示することが推奨されてる)
 const sub = (a: number, b: number) => a - b;  // 推論: number
 ```
 
@@ -93,9 +91,9 @@ function fail(msg: string): never {
 }
 ```
 
-`never` は Day 1 後半の **網羅性チェック** で再登場します。
+`never` は  **網羅性チェック** で詳細を話します。
 
-## any と unknown (チラ見せ)
+## any と unknown
 
 ```ts
 let x: any;       // 何でも入る + 何にでも代入できる (危険)
@@ -110,26 +108,87 @@ if (typeof y === "string") {
 ```
 
 - `any` は 「型チェックを諦める」 = TS をやる意味がない
-- 外部から来るデータは `unknown` で受けて、検証してから使う (Day 2 で詳しく)
+- 外部から来るデータは `unknown` で受けて、検証してから使う
 
-## ミニ演習 (20 分)
+## 演習 (60 分)
+
+### Part A — 写経 + 動作確認 (15 分)
+
+ファイル: 任意の `.ts` ファイル (`scratch.ts` など作って試してください)
 
 ```ts
-// 1. 以下を埋めてください
-function square(/* TODO */) {
-  return n * n;
+// 1. プリミティブ型を実際に書いて、エラーになるパターンも試す
+const name: string = "Chihaya Kisaragi";
+const age: number = 16;
+
+// const age: number = "16";   // ❌ コメントを外して何が起きるか確認
+// const flag: boolean = 0;    // ❌
+
+// 2. 型推論を確認 (VSCode で変数にホバー)
+const n = 42;          // ホバー → ?
+let m = 42;            // ホバー → ?
+const t = "gold";      // ホバー → ?
+let s = "gold";        // ホバー → ?
+
+// 3. 関数の引数・戻り値型
+function add(a: number, b: number): number {
+  return a + b;
+}
+console.log(add(1, 2));
+```
+
+### Part B — 自分で型を付ける (35 分)
+
+```ts
+// 1. 文字列を受け取って大文字にして返す関数
+function shout(/* TODO */) {
+  return s.toUpperCase() + "!";
 }
 
-// 2. 数値配列の合計を返す関数
-function sum(/* TODO */) {
-  return numbers.reduce((a, b) => a + b, 0);
+// 2. 数値配列の最大値を返す関数 (空配列なら undefined)
+function max(/* TODO */) {
+  if (numbers.length === 0) return undefined;
+  return Math.max(...numbers);
 }
 
-// 3. 名前と年齢を受け取って "Taro (25)" 形式で返す
+// 3. 数値配列を受け取り、偶数だけの配列を返す関数
+function evens(/* TODO */) {
+  return numbers.filter((n) => n % 2 === 0);
+}
+
+// 4. 名前と年齢を受け取って "Chihaya Kisaragi (16)" 形式の文字列を返す関数
 function format(/* TODO */) {
   return `${name} (${age})`;
 }
+
+// 5. ユーザー名の配列から、最初のユーザーの名前を返す関数 (空配列なら "anonymous")
+function firstName(/* TODO */) {
+  return names[0] ?? "anonymous";
+}
 ```
+
+ヒント:
+- 戻り値の型が `T | undefined` になる場面を意識する
+- `string[]` と `Array<string>` はどちらでもよい
+
+### Part C — 任意 (早く終わったら)
+
+```ts
+// 1. 何でも受け取れる log 関数を書きたい。any を使わずに書けるか?
+//    (ヒント: unknown と型ガード、または ジェネリクス。今日は触りだけ)
+function log(/* TODO */) {
+  /* TODO */
+}
+
+// 2. 関数の引数・戻り値の型 を 「型エイリアス」 で表現してみる
+type BinaryOp = /* TODO */;
+const add2: BinaryOp = (a, b) => a + b;
+const mul2: BinaryOp = (a, b) => a * b;
+```
+
+ヒント:
+- 関数型は `(引数名: 型, ...) => 戻り値の型` の形で書ける
+- `add2` / `mul2` の中身を見て、引数と戻り値が何になるか考える
 
 ## 講師向けメモ
 
