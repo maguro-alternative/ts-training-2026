@@ -57,6 +57,28 @@ interface User {
 | プリミティブのエイリアス | ✅ | ❌ |
 | 宣言マージ | ❌ | ✅ |
 
+それぞれの差を実例で:
+
+```ts
+// 【オブジェクト型】両方OK (上で見た通り)
+
+// 【ユニオン型】type のみ
+type Status = "loading" | "success" | "error";
+// interface Status = ...   // ❌ 文法エラー
+
+// 【プリミティブのエイリアス】type のみ
+type UserId = string;
+// interface UserId extends string {}   // ❌
+
+// 【宣言マージ】interface のみ
+interface Box { width: number }
+interface Box { height: number }   // ← 同名 interface は自動でマージされる
+const b: Box = { width: 100, height: 50 };   // ✅ 両方必要
+
+type Card = { width: number };
+// type Card = { height: number };   // ❌ 同名 type の再宣言はエラー
+```
+
 実務の使い分け:
 
 - **オブジェクト型**: どちらでも良い。チームの好みに合わせる
@@ -78,9 +100,11 @@ const a: Product = { name: "Book", price: 1000 };               // ✅
 const b: Product = { name: "Book", price: 1000, description: "A novel" };  // ✅
 ```
 
+似た様な表現方法として`string | undefined`があります。
+
 ここで出てくる `string | undefined` は **ユニオン型** という記法で、「`string` または `undefined` のどちらか」という意味です(ユニオン型は別章で詳しく扱います)。
 
-一見 `description?: string` と `description: string | undefined` は同じに見えます。実際 **ほぼ同じ** ですが、微妙に違います:
+一見 `description?: string` と `description: string | undefined` は同じ様に見えますが、微妙に違います。
 
 ```ts
 type WithOptional = { x?: number };       // x を省略してよい
