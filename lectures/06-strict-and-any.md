@@ -1,7 +1,5 @@
 # 06. strict と any との戦い方
 
-> Day 2 午後 / 講義 35 分 + ミニ演習 25 分 / 対応する Day3 課題: 05
-
 ## ゴール
 
 - `strict` モードの中身を説明できる
@@ -159,7 +157,36 @@ if (el && isHTMLDivElement(el)) {
 | ライブラリの型がない | 自分で `.d.ts` を書く / DefinitelyTyped を入れる |
 | 一時的に逃げたい | `// FIXME: any` と理由付きコメントを残す |
 
-## ミニ演習 (25 分)
+## 演習
+
+### Part A — any 1個ずつ直す
+
+```ts
+// 1. any を string に直す
+function shout(s: any): string {
+  return s.toUpperCase() + "!";
+}
+// ↓ 直してみる
+function shout2(/* TODO */): string {
+  return s.toUpperCase() + "!";
+}
+
+// 2. unknown と絞り込み
+function double(x: unknown): number {
+  if (typeof x === "number") return x * 2;
+  if (typeof x === "string") return Number(x) * 2;
+  throw new Error("unsupported");
+}
+
+// 3. strictNullChecks の感触をつかむ
+function greet(name: string | null): string {
+  // return `Hello, ${name.toUpperCase()}!`;   // ❌ name が null かも
+  /* TODO: ?. と ?? を使って書き直す */
+  return /* TODO */;
+}
+```
+
+### Part B — parseQueryString のリファクタ
 
 ```ts
 // 以下のコードは any だらけ。strict で通るように直してください。
@@ -182,6 +209,47 @@ console.log(q.name);
 - 入力は `string`
 - 戻り値は `Record<string, string>`
 - `forEach` の中の `pair` は推論に任せられる
+
+```ts
+// もう 1 問: any を消す
+function sumByKey(items: any, key: any): number {
+  return items.reduce((acc: any, item: any) => acc + item[key], 0);
+}
+
+// 例: sumByKey([{p:100}, {p:200}], "p") → 300
+//
+// ヒント: ジェネリクスを使う。K extends keyof T、T[K] extends number など
+```
+
+### Part C — 任意
+
+```ts
+// 1. unknown のレスポンスを安全に検証する型ガード
+//    { id: string; name: string } の形か検証
+type UserDto = { id: string; name: string };
+
+function isUserDto(x: unknown): x is UserDto {
+  /* TODO */
+}
+
+const json: unknown = JSON.parse('{"id":"u1","name":"Taro"}');
+if (isUserDto(json)) {
+  console.log(json.name);  // 安全
+}
+
+// 2. 安全な型アサーション (理由コメント付き)
+//    DOM 要素を取り出すときに as を使う場面と、型ガードで書き換える場面の比較
+const el1 = document.getElementById("app") as HTMLDivElement;  // ❌ 雑
+
+function isHTMLDivElement(x: unknown): x is HTMLDivElement {
+  return x instanceof HTMLDivElement;
+}
+
+const el2 = document.getElementById("app");
+if (el2 && isHTMLDivElement(el2)) {
+  /* TODO: el2 を使う */
+}
+```
 
 ## 講師向けメモ
 

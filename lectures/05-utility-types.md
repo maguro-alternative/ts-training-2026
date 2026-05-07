@@ -1,7 +1,5 @@
 # 05. ユーティリティ型
 
-> Day 2 午前 / 講義 40 分 + ミニ演習 25 分 / 対応する Day3 課題: 04
-
 ## ゴール
 
 - TS 標準のユーティリティ型を覚えて使える
@@ -163,7 +161,39 @@ type CreateUserInput = Omit<ApiUser, "id" | "createdAt" | "updatedAt" | "deleted
 type UpdateUserInput = Partial<CreateUserInput>;
 ```
 
-## ミニ演習 (25 分)
+## 演習
+
+### Part A — 写経
+
+```ts
+type User = { id: string; name: string; age: number };
+
+// Partial: 全部オプショナル
+type DraftUser = Partial<User>;
+const d1: DraftUser = {};
+const d2: DraftUser = { name: "Taro" };
+
+// Pick: 取り出す
+type UserName = Pick<User, "id" | "name">;
+const u1: UserName = { id: "u1", name: "Taro" };
+
+// Omit: 除外
+type UserNoId = Omit<User, "id">;
+const u2: UserNoId = { name: "Taro", age: 25 };
+
+// Record: キー → 値のマップ
+type UsersById = Record<string, User>;
+const map: UsersById = { u1: { id: "u1", name: "Taro", age: 25 } };
+
+// ReturnType: 関数の戻り値型を取る
+function makeUser() {
+  return { id: "u1", name: "Taro" };
+}
+type UserReturned = ReturnType<typeof makeUser>;
+// = { id: string; name: string }
+```
+
+### Part B — Article から派生型を作る
 
 ```ts
 type Article = {
@@ -178,14 +208,43 @@ type Article = {
 // 1. 一覧表示用の型: id, title, authorId のみ
 type ArticleListItem = /* TODO */;
 
-// 2. 新規作成リクエスト: id と publishedAt 以外
+// 2. 新規作成リクエスト: id と publishedAt 以外 (それ以外は必須)
 type CreateArticleRequest = /* TODO */;
 
-// 3. 更新リクエスト: id 以外がオプショナル
+// 3. 更新リクエスト: id は必須 / それ以外はオプショナル
 type UpdateArticleRequest = /* TODO */;
 
 // 4. ID から記事を引くマップ型
 type ArticlesById = /* TODO */;
+
+// 5. タグ付け状態の型
+//    各タグ → boolean のマップ ({ react: true, ts: false, ... })
+type Tag = "react" | "vue" | "ts" | "go";
+type TagFlags = /* TODO: Record を使う */;
+```
+
+### Part C — 任意
+
+```ts
+// 1. ReturnType + typeof を活用する
+async function fetchUser() {
+  return { id: "u1", name: "Taro", age: 25 };
+}
+
+type FetchedUser = /* TODO: 上の関数の (await した後の) 戻り値型を取る */;
+// ヒント: Awaited<ReturnType<typeof fetchUser>>
+
+// 2. Parameters
+function logEvent(user: { id: string }, event: string, payload: unknown) {}
+type LogArgs = Parameters<typeof logEvent>;
+// = [user: { id: string }, event: string, payload: unknown]
+
+// 3. NonNullable 演習
+function getOptionalName(): string | null | undefined {
+  return Math.random() > 0.5 ? "Taro" : null;
+}
+type Name = NonNullable<ReturnType<typeof getOptionalName>>;
+// = string
 ```
 
 ## 講師向けメモ

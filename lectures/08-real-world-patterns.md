@@ -1,7 +1,5 @@
 # 08. 実務パターン (API型・型ガード・Result)
 
-> Day 2 午後 / 講義 40 分 + ミニ演習 30 分 / 対応する Day3 課題: 07
-
 ## ゴール
 
 - 外部 API レスポンスを型で安全に扱える
@@ -169,28 +167,90 @@ if (r.ok) {
 - Discriminated Union で TS が自動絞り込み
 - React の状態管理でもこのパターンが多用されます
 
-## ミニ演習 (30 分)
+## 演習
+
+### Part A — API レスポンス型を写経
 
 ```ts
-// 1. 商品取得 API の型を Discriminated Union で定義してください
-//    成功: { status: "ok", product: { id: string, name: string, price: number } }
-//    NotFound: { status: "not_found", productId: string }
-//    Error: { status: "error", message: string }
+// ユーザー検索 API のレスポンス型 (講義の例)
+type SuccessResponse = {
+  status: "success";
+  users: { id: string; name: string }[];
+};
+type ValidationError = {
+  status: "error";
+  errorType: "validation";
+  message: string;
+};
+type ServerError = {
+  status: "error";
+  errorType: "server";
+  message: string;
+  retryAfter: number;
+};
+type ApiResponse = SuccessResponse | ValidationError | ServerError;
 
+// 動かしてみる
+function handle(res: ApiResponse) {
+  if (res.status === "success") return res.users.length;
+  if (res.errorType === "server") return `retry after ${res.retryAfter}s`;
+  return res.message;
+}
+```
+
+### Part B — 商品取得 API + Result 型 (30 分)
+
+```ts
+// 1. 商品取得 API の型を Discriminated Union で定義
+//    成功:    { status: "ok", product: { id: string, name: string, price: number } }
+//    NotFound: { status: "not_found", productId: string }
+//    Error:    { status: "error", message: string }
 type ProductResponse = /* TODO */;
 
-function handle(res: ProductResponse) {
+function handleProduct(res: ProductResponse): string {
   /* TODO: switch で書き分ける。default で never チェック */
 }
 
-// 2. Result 型を使って、文字列をJSON parse する関数を書く
-//    成功: { ok: true, value: unknown }
-//    失敗: { ok: false, error: string }
-
+// 2. Result 型を定義
 type Result<T, E> = /* TODO */;
 
+// 3. 文字列を JSON parse する関数 (例外を投げない)
+//    成功: { ok: true, value: unknown }
+//    失敗: { ok: false, error: string }
 function safeJsonParse(s: string): Result<unknown, string> {
-  /* TODO */
+  /* TODO: try/catch で JSON.parse を包む */
+}
+
+const r1 = safeJsonParse('{"x":1}');
+if (r1.ok) {
+  console.log(r1.value);   // unknown
+} else {
+  console.error(r1.error); // string
+}
+```
+
+### Part C — 任意
+
+```ts
+// 1. fetch + 検証
+//    架空の /api/users から ApiResponse を受け取る関数
+async function searchUsers(q: string): Promise<ApiResponse> {
+  const res = await fetch(`/api/users?q=${q}`);
+  const json: unknown = await res.json();
+  /* TODO: json が ApiResponse か検証してから返す。違ったら例外を投げる */
+}
+
+// 2. Result 型ヘルパー
+function ok<T>(value: T): Result<T, never> {
+  return { ok: true, value };
+}
+function err<E>(error: E): Result<never, E> {
+  return { ok: false, error };
+}
+
+// 3. 上のヘルパーで safeJsonParse を書き直す
+function safeJsonParse2(s: string): Result<unknown, string> {
+  /* TODO: ok / err を使う */
 }
 ```
 

@@ -1,7 +1,5 @@
 # 07. Mapped Types と Conditional Types 入門
 
-> Day 2 午後 / 講義 50 分 + ミニ演習 30 分 / 対応する Day3 課題: 06, 08
-
 ## ゴール
 
 - Mapped Types を読み書きできる
@@ -164,18 +162,95 @@ type UserGetters = Getters<User>;
 
 `Capitalize` も TS 標準のユーティリティ型です (`Lowercase`, `Uppercase`, `Uncapitalize` も)。
 
-## ミニ演習 (30 分)
+## 演習
+
+### Part A — 写経
+
+```ts
+type User = { id: string; name: string; age: number };
+
+// 1. MyPartial を写経
+type MyPartial<T> = {
+  [K in keyof T]?: T[K];
+};
+type DraftUser = MyPartial<User>;
+// = { id?: string; name?: string; age?: number }
+
+// 2. MyReadonly を写経
+type MyReadonly<T> = {
+  readonly [K in keyof T]: T[K];
+};
+type FrozenUser = MyReadonly<User>;
+// const u: FrozenUser = { id: "u1", name: "Taro", age: 25 };
+// u.age = 26;  // ❌ コメントを外して確認
+
+// 3. MyRequired を写経
+type WithOptional = { id?: string; name?: string };
+type MyRequired<T> = {
+  [K in keyof T]-?: T[K];   // -? で ? を取り除く
+};
+type Strict = MyRequired<WithOptional>;
+// = { id: string; name: string }
+
+// 4. 簡単な Conditional Type
+type IsString<T> = T extends string ? true : false;
+type A = IsString<"hello">;   // true
+type B = IsString<42>;        // false
+```
+
+### Part B — 自作する
 
 ```ts
 // 1. Pick を自作する
 type MyPick<T, K extends keyof T> = /* TODO */;
+type Picked = MyPick<User, "id" | "name">;
+// = { id: string; name: string }
 
-// 2. Omit を自作する (ヒント: Exclude を使ってよい)
+// 2. Omit を自作する (ヒント: Exclude<keyof T, K> を使う)
 type MyOmit<T, K extends keyof T> = /* TODO */;
+type Omitted = MyOmit<User, "age">;
+// = { id: string; name: string }
 
-// 3. すべてのプロパティを optional にして、null も許容する型
+// 3. Nullable<T>: 全プロパティを optional にして null も許容
 type Nullable<T> = /* TODO */;
-// 例: Nullable<{x: number}> = { x?: number | null }
+type N = Nullable<{ x: number; y: string }>;
+// = { x?: number | null; y?: string | null }
+
+// 4. ReturnType を自作 (infer を使う)
+type MyReturnType<F> = F extends (/* TODO */) => /* TODO */ ? /* TODO */ : never;
+type R = MyReturnType<() => string>;   // = string
+
+// 5. NonNullable を自作
+type MyNonNullable<T> = /* TODO */;
+type NN = MyNonNullable<string | null | undefined>;   // = string
+```
+
+### Part C — 任意
+
+```ts
+// 1. FunctionKeys: 値が関数のキーだけを抜き出す
+type FunctionKeys<T> = /* TODO */;
+
+type Mixed = {
+  name: string;
+  greet: () => void;
+  age: number;
+  save: () => Promise<void>;
+};
+type Fns = FunctionKeys<Mixed>;
+// = "greet" | "save"
+
+// 2. Template Literal Types で getter 名を生成
+type Getters<T> = {
+  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];
+};
+type UserGetters = Getters<{ name: string; age: number }>;
+// = { getName: () => string; getAge: () => number }
+
+// 3. Promise<T> を unwrap
+type UnwrapPromise<T> = /* TODO: infer を使う */;
+type X = UnwrapPromise<Promise<string>>;   // = string
+type Y = UnwrapPromise<number>;            // = number (そのまま)
 ```
 
 ## 講師向けメモ
