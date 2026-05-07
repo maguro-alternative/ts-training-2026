@@ -94,24 +94,24 @@ function handle(err: Error | string) {
 `typeof` / `in` で表現できないときは **自分で型ガードを書きます**:
 
 ```ts
-type Cat = { kind: "cat"; purrs: boolean };
+type ExpandBey = { blade: "expand"; bullet: string, mainBody: string };
 
-function isCat(animal: unknown): animal is Cat {
+function isExpand(beyblade: unknown): beyblade is ExpandBey {
   return (
-    typeof animal === "object" &&
-    animal !== null &&
-    "kind" in animal &&
-    (animal as { kind: unknown }).kind === "cat"
+    typeof beyblade === "object" &&
+    beyblade !== null &&
+    "blade" in beyblade &&
+    (beyblade as { blade: unknown }).blade === "expand"
   );
 }
 
 const x: unknown = getFromApi();
-if (isCat(x)) {
-  x.purrs;  // ✅ x: Cat に絞り込まれている
+if (isExpand(x)) {
+  x.bullet;  // ✅ x: ExpandBey に絞り込まれている
 }
 ```
 
-`animal is Cat` の **`is`** が型ガードの目印です。「`true` を返したら呼び出し元では `animal` を `Cat` として扱ってよい」と TS に伝えます。
+`beyblade is ExpandBey` の **`is`** が型ガードの目印です。「`true` を返したら呼び出し元では `beyblade` を `ExpandBey` として扱ってよい」と TS に伝えます。
 
 ## Discriminated Union (タグ付きユニオン)
 
@@ -183,9 +183,9 @@ Type '{ status: "idle" }' is not assignable to type 'never'.
 
 → 「すべてのケースを処理し忘れている」とコンパイラが教えてくれる。これが **網羅性チェック** です。
 
-## 演習 (120 分)
+## 演習
 
-### Part A — 写経 + typeof / in による絞り込み (25 分)
+### Part A — 写経 + typeof / in による絞り込み
 
 ```ts
 // 1. typeof で string と number を絞り込む
@@ -200,27 +200,30 @@ console.log(format("hello"));
 console.log(format(3.14));
 
 // 2. リテラル型ユニオンと switch
-type Tier = "gold" | "silver" | "bronze";
+type Member = "mirai" | "shizuka" | "tsubasa";
+type Attribute = "Princess" | "Fairy" | "Angel"
 
-function discount(tier: Tier): number {
+function attribute(member: Member): Attribute {
   switch (tier) {
-    case "gold": return 0.1;
-    case "silver": return 0.05;
-    case "bronze": return 0;
+    case "mirai": return "Princess";
+    case "shizuka": return "Fairy";
+    case "tsubasa": return "Angel";
   }
 }
 
 // 3. in で絞り込み
-type Cat = { purrs: boolean; name: string };
-type Dog = { barks: boolean; name: string };
+type UnicornGundam = { hyperMegaRancher: boolean; name: string };
+type ΞGundam = { funnelMissile: boolean; name: string };
 
-function speak(animal: Cat | Dog): string {
-  if ("purrs" in animal) return `${animal.name} purrs`;
-  return `${animal.name} barks`;
+function armed(gundam: UnicornGundam | ΞGundam): string {
+  if ("hyperMegaRancher" in gundam) {
+    return `${gundam.name} hyperMegaRancher`;
+  }
+  return `${gundam.name} funnelMissile`;
 }
 ```
 
-### Part B — Discriminated Union と網羅性チェック (60 分)
+### Part B — Discriminated Union と網羅性チェック
 
 ```ts
 // 1. 図形の面積を計算する関数を Discriminated Union で書く
@@ -268,7 +271,7 @@ function handle(e: UiEvent): string {
 }
 ```
 
-### Part C — ユーザー定義型ガード (35 分)
+### Part C — ユーザー定義型ガード
 
 ```ts
 // 1. unknown を string[] に絞り込む型ガードを書く
@@ -281,14 +284,7 @@ if (isStringArray(v)) {
   v.forEach((s) => console.log(s.toUpperCase()));  // v: string[]
 }
 
-// 2. unknown を Cat に絞り込む型ガード
-type Cat2 = { kind: "cat"; name: string; purrs: boolean };
-
-function isCat(x: unknown): x is Cat2 {
-  /* TODO: object チェック → null チェック → kind プロパティ確認 */
-}
-
-// 3. fetch のレスポンス的な雰囲気の検証
+// 2. fetch のレスポンス的な雰囲気の検証
 //    json: unknown が { id: string; name: string } の形か検証する型ガードを書く
 type UserDto = { id: string; name: string };
 
