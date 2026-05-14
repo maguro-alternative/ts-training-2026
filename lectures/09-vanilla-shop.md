@@ -84,9 +84,6 @@ npm install
 npm run dev
 ```
 
-> Tailwind CSS v4 の Vite プラグインを使用しています。
-> v3 のような `tailwind.config.js` や `postcss.config.js` は不要です。
-
 ### 中身
 
 ```
