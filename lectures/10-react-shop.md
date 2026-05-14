@@ -40,9 +40,11 @@ export default App;
 ReactはJSXと呼ばれる構文でマークアップを行います。JSの中にHTMLを書くことができるのです。
 `src/App.tsx`はAppという関数がJSXを返す定義をしています。一般的にこれをコンポーネントと呼び、アプリケーションの部品としての管理の単位となります。
 
+`main.tsx`で上記のコンポーネントの呼び出し、root要素にコンポーネントの内容を書き出すようになっています。。`index.html`上で`main.tsx`を呼び出しているためここにレンダリングされる形でHTMLとして表示されているのです。
+
 ---
 
-### Step 3: 静的JSXで商品カード1枚を書く
+### 静的JSXで商品カード1枚を書く
 
 ハードコードでまず1枚だけ。
 
@@ -68,10 +70,6 @@ function App() {
 }
 ```
 
-✅ **ここまでで動くもの**: 商品カード1枚が表示される
-🆚 **vanilla との比較**:
-- vanilla: `document.createElement("div")` → `card.className = "..."` → `card.appendChild(img)` ... と数十行
-- React: JSXでHTML同様に書ける
 
 ---
 
