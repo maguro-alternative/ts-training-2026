@@ -2,9 +2,13 @@
 
 ## ゴール
 
-- 3日間の研修で何を持ち帰るかを理解する
 - 環境構築を完了する (Node 20+, VSCode, リポジトリ clone)
 - TypeScript を「なぜやるのか」を腹落ちさせる
+
+## TypeScriptの歴史
+ここが詳しいので一緒に軽くみましょう。
+
+https://typescriptbook.jp/overview/before-typescript
 
 ## なぜ TypeScript か
 
