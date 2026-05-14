@@ -1,34 +1,23 @@
 # 10. Reactで同じアプリを作り直そう
 
 TypeScript と DOM API だけで、商品検索とカートの動くアプリを作りきってもらいました。
-そのアプリを、 **React** という別のアプローチで作り直します。
+そのアプリをReactという別のアプローチで作り直します。
 
-「機能は完全に同じ」「見た目もほぼ同じ」アプリを2回作ることで、 **同じ問題に対するアプローチの違い** が体に染みます。
-午後の研修が終わるころには、「Reactって何ができるか」より **「なぜ存在するか」** を答えられるようになっているはずです。
 
 ## ゴール
 
-- React の **JSX / state / 再描画モデル** が、午前のアプリの何を解決するかを理解する
-- 同じ機能追加(★お気に入り)を午前 / 午後の両実装に入れて、**開発速度の差** を実感する
-- 「React は道具のひとつ」として、 vanilla との **トレードオフ** を自分の言葉で言える
+- React の JSX / state / 再描画モデル が、午前のアプリの何を解決するかを理解する
+- 「React は道具のひとつ」として、 vanilla との トレードオフを自分の言葉で言える
 
 ## 講義
 スライドにて
 
-## 移行ステップ(12段階)
-
-「丸ごと書き直し」ではなく、**1ステップごとに動くものを保ちながら少しずつReactの機能を追加** していきます。
-
-各ステップは:
-- ✅ **ここまでで動くもの**: 完成形のスクショで言うと何が見えるか
-- 🆚 **午前の vanilla 版との比較**: 「同じ機能を vanilla ではどう書いていたか」を毎回振り返る
-
 ---
 
-### Step 1+2: プロジェクト雛形をコピー(Hello World まで完了済み)
+### Hello World
 
-完成形の雛形は **`templates/10-react-shop/`** に用意してあります。
-**Vite + React + TypeScript + Tailwind v4** + 共通の `products.ts` / `types.ts` までセットアップ済みで、 `App.tsx` に `<h1>React Shop</h1>` だけが表示される **Step 2 完了状態** から始まります。
+完成形の雛形は `templates/10-react-shop/` に用意してあります。
+一旦セットアップしてみましょう。
 
 ```bash
 cp -R templates/10-react-shop ~/work/react-shop
@@ -48,17 +37,8 @@ function App() {
 export default App;
 ```
 
-✅ **ここまでで動くもの**: タイトルだけが表示される
-🆚 **vanilla との比較**:
-- vanilla: `<h1>` を `index.html` に直書き
-- React: **JSのファイルの中にHTMLっぽい記法(JSX)を書く**。これがReactの最大の特徴
-
-📝 **学ぶこと**:
-- HTMLのclassは `class` だが、JSXでは `className`(`class` はJSの予約語のため)
-- Tailwind CSS v4 の Vite プラグインが入っているので、 `src/index.css` の `@import "tailwindcss";` 1行で全てのユーティリティクラスが使える
-
-> 雛形ファイルの内訳: `vite.config.ts` で `react()` と `tailwindcss()` プラグインを併用、 `tsconfig.json` は `tsconfig.app.json` と `tsconfig.node.json` の references 構成。
-> `src/products.ts` と `src/types.ts` は午前の vanilla 版と同じ内容(今後の Step で使います)。
+ReactはJSXと呼ばれる構文でマークアップを行います。JSの中にHTMLを書くことができるのです。
+`src/App.tsx`はAppという関数がJSXを返す定義をしています。一般的にこれをコンポーネントと呼び、アプリケーションの部品としての管理の単位となります。
 
 ---
 
