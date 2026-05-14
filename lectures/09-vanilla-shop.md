@@ -66,8 +66,6 @@ type Cart = Record<string, number>;   // { [productId]: quantity }
 // or: type Cart = { productId: string; quantity: number }[];
 ```
 
-→ どちらの形を選ぶかで実装の楽さが変わります。設計時に意識して、最後の振り返りで議論しましょう。
-
 ## 制約
 
 - ✅ TypeScript + Vite (`npm create vite@latest -- --template vanilla-ts`)
@@ -77,13 +75,9 @@ type Cart = Record<string, number>;   // { [productId]: quantity }
 - ❌ UIフレームワーク・状態管理ライブラリ
 - ✅ 商品データは `src/products.ts` に静的定義(API連携は今日はやらない)
 
-## スターター雛形
-
-**ロジック本体(stateの更新・描画・イベント)は受講者が書く** 部分なので空欄になっています。
+## 雛形
 
 ### 開始手順
-
-完成形の雛形は **`templates/09-vanilla-shop/`** に用意してあります。以下でコピーして開始してください:
 
 ```bash
 cp -R templates/09-vanilla-shop ~/work/vanilla-shop
@@ -92,17 +86,10 @@ npm install
 npm run dev
 ```
 
-`http://localhost:5173` を開くとヘッダーだけが表示されます(`<main>` の中身は空)。
-ここから [`src/state.ts`](../templates/09-vanilla-shop/src/state.ts) / [`src/render.ts`](../templates/09-vanilla-shop/src/render.ts) / [`src/events.ts`](../templates/09-vanilla-shop/src/events.ts) の TODO を埋めていきます。
-
 > Tailwind CSS v4 の Vite プラグインを使用しています。
 > v3 のような `tailwind.config.js` や `postcss.config.js` は不要です。
 
-### 雛形の中身
-
-以下、各ファイルの **コピー後の状態** を参考用に掲載します(実際にはコピーで配置されているので、書く必要はありません)。
-
-雛形を以下のファイル構成で配置します:
+### 中身
 
 ```
 src/
@@ -198,9 +185,7 @@ export const products: Product[] = [
 
 ### Tailwind className チートシート(描画用)
 
-JS で動的に DOM を生成するときに使う `className`(または `class` 属性)の **おすすめの組み合わせ**を一覧にしました。
 `render.ts` を実装するときにコピペして使ってください。
-**自分で考える必要はありません**(今日の研修の主目的はCSSではないので)。
 
 | 役割 | 推奨 className |
 |---|---|
@@ -334,35 +319,6 @@ render();
 // イベントリスナー登録
 registerEvents();
 ```
-
-これで:
-- ✅ 検索ボックスの入力 → state 更新 → 再描画 までの **配線パターン** が1箇所だけ書かれている
-- ❌ それ以外の更新(カート追加・数量変更・削除・ビュー切替の中身)はすべて `TODO`
-
-検索ボックスの実装を **「同じパターンを他のイベントにも繰り返す」** ロールモデルとして残しています。
-
-## 進め方の例
-
-1. **静的HTMLで一覧をハードコード**(まずDOM構造を確定させる)
-2. `products` を `for` で走査して動的に商品カードを生成
-3. 検索ボックスの `input` イベントで `searchQuery` を更新 → リスト再描画
-4. カート state を作る(モジュールスコープの `let cart: Cart = {}`)
-5. 「カートに追加」ボタン → cart 更新 → **バッジ・カート画面・合計を全部手動で更新**
-6. カート画面のビュー切替(`<main>` の中身を切り替え)
-7. 数量変更 → cart更新 → **再描画 → イベントリスナー貼り直し** で詰まる ← ここが体感ポイント
-
-## 必ず通る痛点(これが体感ポイント)
-
-| 痛点 | 何が辛いか |
-|---|---|
-| **検索ワード変更時の再描画** | `<input>` の `input` イベント → 商品リストを `innerHTML = ""` で消して再生成 → イベントリスナーを貼り直す必要がある |
-| **カート追加時の同期** | 「ヘッダーのバッジ数 / カート画面の行 / 合計金額」を全部別々のDOM操作で同期しないといけない |
-| **数量変更** | `<input type="number">` の値とJS変数の同期、合計の再計算、カート行のテキスト更新 |
-| **イベントリスナーの貼り直し** | `innerHTML` で再描画したら子要素のリスナーは消える。イベント委譲 (event delegation) を使うか毎回貼り直すか |
-| **任意課題を入れたとき** | 既存の再描画ロジックと衝突して必ず1〜2箇所バグる |
-
-→ ここで苦しむこと自体が、今日の研修の中身です。
-**講師は安易に答えを教えず、まず詰まらせる** のが大事です。
 
 ## 動作確認チェックリスト
 
