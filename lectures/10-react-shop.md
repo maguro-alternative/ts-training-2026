@@ -515,13 +515,12 @@ function Header({
 - [ ] 数量を 0 にすると行が消える
 - [ ] 検索結果が0件のとき適切なメッセージが出る
 
-## 持ち帰り課題: API連携(今日はやらない)
+## 小話: API連携
 
 > 今日の研修では商品データを `import { products } from "./products"` で **静的にimport** していますが、
 > 実際のWebアプリケーションではサーバーから fetch で商品データを取ってくるのが普通です。
 >
-> Reactでは **`useEffect`** という機能を使って「コンポーネントが描画された後」に fetch を呼ぶのが定番のパターンです。
-> 例えば:
+> Reactでは `useEffect` という機能を使って「コンポーネントが描画された後」に fetch を呼ぶことが基本です。
 >
 > ```tsx
 > const [products, setProducts] = useState<Product[]>([]);
@@ -537,4 +536,4 @@ function Header({
 > 「商品データをAPIから取ってくる + ローディング中は『読み込み中…』を出す」
 > を自分で実装してみてください。
 >
-> ※ 後述する localStorage 永続化も同じく `useEffect` を使う題材です。
+> ※ 現時点ではあまり推奨されない方式でず。
