@@ -213,14 +213,25 @@ function App() {
 `ProductCard`に変数を引き渡すことで商品カードをコンポーネントとして使いまわすことが可能になりました。
 また式なので、JSXを返す前に演算を行ったり、JSX内で式を組むことも可能です。
 
-```
+```tsx
+function Sum() {
+  const a = 6;
+  const b = 7;
+  return (
+    <p>
+      {a} + {b} = {a + b}
+    </p>
+  );
+}
 ```
 
 ---
 
-### Step 7: 繰り返し — products を map() で並べる
+### products を map() で並べる
 
-午前の vanilla 版の `src/products.ts` をそのまま React 版にもコピー(完全に同じものでOK)。
+コンポーネントに分離して可読性は上がりましたがまだ冗長です。
+データごとに繰り返して表示する方式を取るため、mapで繰り返してコンポーネントを表示する様にしましょう。
+09の`src/products.ts`を持ってきて以下の様に書き換えましょう。
 
 ```tsx
 import { products } from "./products";
@@ -241,18 +252,13 @@ function App() {
 }
 ```
 
-✅ **ここまでで動くもの**: Step 4 と見た目は同じだが、**コードは8回コピペが消えてスッキリ**
-🆚 **vanilla との比較**:
-- vanilla: `for (const p of products) { const card = createCard(p); root.appendChild(card); }`
-- React: `products.map((p) => <ProductCard ... />)`
-
-⚠️ **重要**: `key={product.id}` を忘れると React の警告が出る。 **リストの各要素には一意な `key` を付ける**
-
 ---
 
-### Step 8: 条件分岐 — 商品0件の表示
+### 条件分岐 — 商品0件の表示
 
-検索ボックスはまだ無いですが、 「商品0件のときの表示」をまず仕込みます:
+現在商品は`products.ts`で定義していますが、実際だとAPIでの取得がメインになります。
+そうなってくると「商品0件のときの表示」というものも考慮する必要が出てきます。
+条件分岐を使うことによって表示を切り替えることができます。以下のように`src/App.tsx`を書き換えてみましょう。
 
 ```tsx
 <main className="p-4">
@@ -268,14 +274,14 @@ function App() {
 </main>
 ```
 
-✅ **ここまでで動くもの**: `products` を一時的に `[]` にすると空メッセージが出る
-🆚 **vanilla との比較**:
-- vanilla: `if (filtered.length === 0) { root.textContent = "..."; return; }` で早期 return
-- React: **JSX内に三項演算子 (`? :`)** で条件分岐できる
+商品が0件の時「該当する商品がありません」と表示される様になりました。
+試しに`src/products.ts`の中身を以下の様に書き換えてみてください。
 
-📝 **学ぶこと**:
-- `条件 && <JSX/>` は「`true` のときだけ表示」
-- `条件 ? <A/> : <B/>` は「どちらかを表示」
+```tsx
+import type { Product } from "./types";
+
+export const products: Product[] = [];
+```
 
 ---
 
