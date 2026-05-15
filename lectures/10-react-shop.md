@@ -338,19 +338,16 @@ function App() {
 `useState`の引数は状態の初期値を表します。今回は空文字なので""を入れてます。
 戻り値はそれぞれ状態の値とそれを変更する関数です。
 この状態が変更するたびにReact側が変更される箇所を自動で検知して、画面が更新されます。
-
-🎯 **ここが今日の山場**: **「state を変えるだけで再描画される」** Reactの再描画モデルを初めて体感する瞬間。
-午前のvanilla実装で書いた「state更新→render()呼び出し」のセットが消えていることに注目してください。
-
-📝 **学ぶこと**:
-- `const [値, セッター] = useState(初期値)` は **配列分割代入**
-- `<input value={...} onChange={...} />` の組み合わせで **制御コンポーネント** にする
+検索ボックスの`onChange`に`setSearchQuery`があり、ここに入力された値が入ることによって状態が更新されます。
 
 ---
 
-### Step 10: useState — カート、合計金額、バッジ数の派生計算
+### カート、合計金額、バッジ数の派生計算
 
-カートの state を追加し、合計やバッジの数字は **state から計算する** だけにします。
+管理する状態を増やします。
+カート、合計金額の2つを追加します。
+
+カートのstateを追加し、合計やバッジの数字はstateから計算するだけにします。
 
 ```tsx
 type Cart = Record<string, number>;
@@ -379,18 +376,16 @@ function App() {
 }
 ```
 
-✅ **ここまでで動くもの**: ヘッダーにバッジが出る(まだ常に 0)
-🆚 **vanilla との比較**:
-- vanilla: `renderCartBadge()` という関数を作り、 cart更新の度に呼んでいた
-- React: **cartが変わると勝手にバッジが再計算される**(派生値はrender関数の中でただ計算するだけ)
-
-📝 **学ぶこと**: state から計算できる値は **state にしない**(`useState` で持たない)。普通の変数で十分
+カートの項目が追加されました。
 
 ---
 
-### Step 11: イベント処理 — カート追加・数量変更・削除
+### イベント処理 — カート追加・数量変更・削除
 
-子コンポーネントに **関数を props で渡す** パターン:
+ここまでで表示は組み上がりましたが、まだ商品の「カートに追加」ボタンを押しても何も起きません。
+ユーザーの操作で state を更新するロジックを足していきます。
+
+カートに商品の追加、削除を行うロジックを追加しましょう。
 
 ```tsx
 function ProductCard({
@@ -418,7 +413,6 @@ function ProductCard({
 function App() {
   const [cart, setCart] = useState<Cart>({});
 
-  // immutable に更新する!
   const addToCart = (productId: string) => {
     setCart({ ...cart, [productId]: (cart[productId] ?? 0) + 1 });
   };
@@ -439,7 +433,11 @@ function App() {
 }
 ```
 
-カート画面表示の切替・数量変更・削除も同様に実装:
+これでボタンを押すたびに、 子の `ProductCard` から `onAddToCart(product.id)` が呼ばれ、 親の `addToCart` が走って `cart` state が更新されます。
+
+#### 数量変更と削除
+
+「カート画面で数量を変える」「数量を 0 にしたら自動で消す」も同じパターンで実装できます。
 
 ```tsx
 const [view, setView] = useState<"products" | "cart">("products");
@@ -454,18 +452,9 @@ const setQuantity = (productId: string, qty: number) => {
 };
 ```
 
-✅ **ここまでで動くもの**: カートに商品追加・数量変更・削除ができ、 **バッジ・合計金額が全部自動同期** する
-🆚 **vanilla との比較**:
-- vanilla: ボタン押下 → state変更 → `render()` で全画面再描画 → イベントリスナー貼り直し
-- React: `setCart` を呼ぶだけで全部追随する
-
-⚠️ **絶対やってはいけない**:
-- ❌ `cart[id] = qty;` (state を直接書き換え → 再描画されない)
-- ✅ `setCart({ ...cart, [id]: qty });` (新しいオブジェクトを作る = immutable 更新)
-
 ---
 
-### Step 12: コンポーネント分割の整理
+### コンポーネント分割の整理
 
 ここまで `App.tsx` に詰め込んだ JSX を、責務ごとに分けます。
 
@@ -485,7 +474,7 @@ src/
   main.tsx
 ```
 
-各コンポーネントには **「必要な値だけ」 props で渡す**:
+各コンポーネントには「必要な値だけ」 propsで渡す様にします。
 
 ```tsx
 function Header({
@@ -509,25 +498,15 @@ function Header({
 }
 ```
 
-✅ **ここまでで動くもの**: 機能は変わらず、コードが整理されている
-🆚 **vanilla との比較**:
-- vanilla: `render.ts` / `events.ts` / `state.ts` でファイル分割
-- React: **「見た目」「props」「内部state」がコンポーネントごとに1ファイルにまとまる**
-
-📝 **学ぶこと**:
-- 「state を **どのコンポーネントに置くか** 」が設計の中心(state lifting)
-- 子に渡すのは **値** と **値を変える関数** の2種類
-
-## よく詰まるポイント(講師がヒントを出す箇所)
-
+## よく詰まるポイント
 - **「リストに `key` を付けて」警告**: `map` のJSXに `key={product.id}` を付ける
-- **`onChange` で TypeScript エラー**: `e.target.value` の型が分からないとき → `React.ChangeEvent<HTMLInputElement>` を見せる(深入りしない)
+- **`onChange` で TypeScript エラー**: `e.target.value` の型が分からないとき → `React.ChangeEvent<HTMLInputElement>`を調べる
 - **state を直接書き換えてしまう**: `cart[id] = qty` ではなく `setCart({ ...cart, [id]: qty })` が必要
 - **ボタンクリックで何も起きない**: `onClick={handleClick()}` と書いてしまう(即時実行されてしまう)→ `onClick={handleClick}`
 
 ## 動作確認チェックリスト(React)
 
-午前の vanilla と完全に同じ機能になっているか同じチェックリストで確認します。
+想定した動作になっているかのチェックリストです。
 
 - [ ] 検索ワードを変えるとリアルタイムで結果が変わる
 - [ ] 商品をカートに追加するとヘッダーのバッジ数が増える
