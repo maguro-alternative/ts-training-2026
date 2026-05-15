@@ -210,15 +210,11 @@ function App() {
   );
 }
 ```
+`ProductCard`に変数を引き渡すことで商品カードをコンポーネントとして使いまわすことが可能になりました。
+また式なので、JSXを返す前に演算を行ったり、JSX内で式を組むことも可能です。
 
-✅ **ここまでで動くもの**: 各商品に異なる名前と価格が表示される
-🆚 **vanilla との比較**:
-- vanilla: `card.querySelector("h3").textContent = name` のように毎回 querySelector
-- React: `{product.name}` と書くだけで埋め込まれる
-
-📝 **学ぶこと**:
-- JSX の中の `{}` は **JSの式を埋め込む記法**
-- `props` は **オブジェクトとして1つ受け取り、 destructuring で取り出す** のが一般的
+```
+```
 
 ---
 
