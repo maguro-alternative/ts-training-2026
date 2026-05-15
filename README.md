@@ -1,7 +1,6 @@
-# TypeScript研修 2026 (3日間)
+# TypeScript研修 2026
 
 新卒向け TypeScript 研修の教材リポジトリです。
-**Day 1〜2 は講義 + ミニ演習**、**Day 3 は演習デー** の3日構成です。
 
 ## 前提
 
@@ -18,51 +17,40 @@ npm run dev
 ```
 
 ## 章構成
+時間などはあくまで目安です。
 
 ### Day 1 — 型システム基礎
 
 | # | テーマ | 講義 | 演習 |
 |---|--------|------|------|
 | 00 | オリエンテーション / 環境構築 | 30m | — |
-| 01 | 基本型 (プリミティブ / 配列 / 関数) | 40m | 20m |
-| 02 | オブジェクト型と型エイリアス | 40m | 25m |
-| 03 | ユニオン型と絞り込み (narrowing) | 50m | 30m |
+| 01 | 基本型 (プリミティブ / 配列 / 関数) | 10m | 60m |
+| 02 | オブジェクト型と型エイリアス | 10m | 60m |
+| 03 | ユニオン型と絞り込み (narrowing) | 10m | 120m |
 
 ### Day 2 — 抽象化と実務
 
 | # | テーマ | 講義 | 演習 |
 |---|--------|------|------|
-| 04 | ジェネリクス | 50m | 30m |
-| 05 | ユーティリティ型 | 40m | 25m |
-| 06 | strict と any との戦い方 | 35m | 25m |
-| 07 | Mapped / Conditional Types 入門 | 50m | 30m |
-| 08 | 実務パターン (API型・型ガード・Result) | 40m | 30m |
+| 04 | ジェネリクス | 10m | 70m |
+| 05 | ユーティリティ型 | 10m | 50m |
+| 06 | strict と any との戦い方 | 10m | 60m |
+| 07 | Mapped / Conditional Types 入門 | 10m | 70m |
+| 08 | 実務パターン (API型・型ガード・Result) | 10m | 40m |
 
 ### Day 3 — 演習デー
 
 `src/exercises/` の課題01〜07を解きます。詳細は `INSTRUCTOR.md` を参照。
 
-## ディレクトリ
+### Day 4 — React ワークショップ
 
-```
-lectures/                  # Day 1〜2 の講義資料
-  00-orientation.md
-  01-basic-types.md
-  02-objects-and-types.md
-  03-union-narrowing.md
-  04-generics.md
-  05-utility-types.md
-  06-strict-and-any.md
-  07-mapped-conditional.md
-  08-real-world-patterns.md
-src/exercises/             # Day 3 の演習課題
-  01-basic-types/
-  02-union-narrowing/
-  ...
-INSTRUCTOR.md              # 講師向けメモ (受講者には配布しない)
-```
+| # | テーマ | 形式 |
+|---|--------|------|
+| 09 | ショッピングアプリを作ろう (Vanilla TS) | 午前 3h |
+| 10 | Reactで同じアプリを作り直そう | 午後 4.5h |
 
-## Day 3 演習の進め方
+
+## 演習の進め方
 
 `src/exercises/` 配下のフォルダを **番号順** に進めてください。
 
@@ -88,7 +76,7 @@ npm run test:watch
 `npm test` を実行すると `public/test-results.json` が更新され、
 ブラウザの進捗画面 (`npm run dev`) にも反映されます。
 
-## ルール (Day 3)
+## ルール
 
 - **`any` の使用は禁止** (Day 2-06 で学んだ通り)
 - **`// @ts-ignore` / `// @ts-expect-error` で型エラーを握りつぶさない**
