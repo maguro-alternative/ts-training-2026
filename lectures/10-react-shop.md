@@ -536,4 +536,31 @@ function Header({
 > 「商品データをAPIから取ってくる + ローディング中は『読み込み中…』を出す」
 > を自分で実装してみてください。
 >
-> ※ 現時点ではあまり推奨されない方式でず。
+> ※ 現時点ではあまり推奨されない方式です。
+
+> 少し試してみたい人向けに、 実際に外部 API を叩いて画像を差し替える例を載せます。
+> [Dog CEO API](https://dog.ceo/dog-api/) は犬の画像をフリーで返してくれます。
+> 
+> 今回は **柴犬のランダム画像** を商品数(8件)分だけ取ってきて、 `placehold.co` のプレースホルダー画像と差し替えてみます。
+> 
+> API の仕様
+> 
+> ```
+> GET https://dog.ceo/api/breed/shiba/images/random/8
+> ```
+> 
+> レスポンス:
+> 
+> ```json
+> {
+>   "message": [
+>     "https://images.dog.ceo/breeds/shiba/shiba-XXXX.jpg",
+>     "https://images.dog.ceo/breeds/shiba/shiba-YYYY.jpg",
+>     ... 全部で8件
+>   ],
+>   "status": "success"
+> }
+> ```
+> 
+> `{8}` の部分を変えれば任意の枚数取れます。
+
