@@ -253,11 +253,3 @@ function safeJsonParse2(s: string): Result<unknown, string> {
   /* TODO: ok / err を使う */
 }
 ```
-
-## 講師向けメモ
-
-- ここまでの章すべての集大成。Day 3 課題07 はここの応用なので、**演習を必ずやってもらう**
-- Zod の話は深入りしない。「ライブラリで楽できる」を知らせるだけで十分
-- 「`fetch().json()` の戻り値が `any` で危ない」は意外と盲点。実例として強調
-- Result 型は React 研修でも (`useFetch` の状態など) 出てくると予告
-- 最後に「Day 3 はこの内容を体に染み込ませる日」と言って終わる

@@ -252,11 +252,3 @@ type UnwrapPromise<T> = /* TODO: infer を使う */;
 type X = UnwrapPromise<Promise<string>>;   // = string
 type Y = UnwrapPromise<number>;            // = number (そのまま)
 ```
-
-## 講師向けメモ
-
-- ここは **読めるようになることをゴール**にする。書けなくてよい
-- `infer` は 1 回見ただけでは絶対わからない。「TS が一番難しい部分の入口」と正直に言う
-- 「実務では自分で書くより、ライブラリの型を読むときに役立つ」と用途を明示
-- Day 3 課題06 (型パズル) は **任意** にした旨を再確認しておく
-- 興味がある人は [type-challenges](https://github.com/type-challenges/type-challenges) を案内

@@ -246,10 +246,3 @@ function getOptionalName(): string | null | undefined {
 type Name = NonNullable<ReturnType<typeof getOptionalName>>;
 // = string
 ```
-
-## 講師向けメモ
-
-- 全部覚えなくていい。**「こういうのがある」を知って、必要なときにググれる** ことが大事と伝える
-- `Pick` と `Omit` の使い分けは「**残したいキーが少ないなら Pick、消したいキーが少ないなら Omit**」
-- `ReturnType<typeof fn>` の `typeof` は値から型を取り出すための演算子で、JS の `typeof` (実行時) と別物。これは混乱ポイント
-- 次章 (07: Mapped/Conditional) で「これらのユーティリティ型がどう作られているか」を扱うので、興味を引いておく

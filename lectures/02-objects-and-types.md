@@ -267,9 +267,3 @@ type Dict = {
 const scores: Dict = { math: 80, english: 90 };
 scores.science = 75;   // ✅
 ```
-
-## 講師向けメモ
-
-- `type` vs `interface` 論争は時間を吸われるので「このリポジトリでは `type` で統一」と早めに切り上げる
-- `?` と `T | undefined` の違いは strict 設定によっては挙動が変わるので **本リポジトリの strict 設定で動かして見せる**
-- ネスト型のところで「実務だと API レスポンスがネスト10層とかある」と予告して Day2 の API型 章へ繋げる
