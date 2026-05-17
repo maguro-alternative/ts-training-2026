@@ -20,7 +20,7 @@ const notYet: undefined = undefined;
 
 ```ts
 const name = "Chihaya Kisaragi";    // 推論: string
-let age = 16;                               // 推論: number
+let age = 16;                       // 推論: number
 ```
 
 ただし「初期値はないが型は決めたい」ときは明示します:
