@@ -19,7 +19,7 @@ const notYet: undefined = undefined;
 実務では明示的に書かず、**推論に任せる** ことが多いです:
 
 ```ts
-const name: string = "Chihaya Kisaragi";    // 推論: string
+const name = "Chihaya Kisaragi";    // 推論: string
 let age = 16;                               // 推論: number
 ```
 
