@@ -42,7 +42,7 @@ function attribute(member: Member): Attribute {
   return "Angel";
 }
 
-discount("tsumugi"); // ❌ Member に存在しない
+attribute("tsumugi"); // ❌ Member に存在しない
 ```
 
 文字列ユニオンは **enum の代わり** によく使います。
