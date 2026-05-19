@@ -9,7 +9,7 @@ const t = "eternal harmony";  // 推論: "eternal harmony" (string リテラル�
 let   s = "my song";          // 推論: string
 ```
 
-`const` だと **リテラル型** に絞られ、 `let` だと **広い型**(`number` / `string`)になる、を体感できればOK。
+`const` だと **リテラル型** に絞られ、 `let` だと **広い型**(`number` / `string`)になる。
 
 ## Part B — 自分で型を付ける
 
@@ -68,7 +68,7 @@ function firstName(names: string[]): string {
 `?? "anonymous"` は実行時には機能するが、 型上は冗長になっている。
 
 **より厳しく書くなら**: `tsconfig.json` で `noUncheckedIndexedAccess: true` を有効にすると `names[0]` が `string | undefined` になり、 `??` が型上も必要になる。
-本研修では深入りせず「実行時の安全策として `??` を使っているのは良い習慣」と説明すれば十分。
+実行時の安全策として `??` を使っているのは良い習慣。
 
 ## Part C — 任意
 
@@ -109,7 +109,6 @@ const s = log("hello");  // T = string
 
 ポイント:
 - 中身に触らず通すだけなら、ジェネリクスで **呼び出し側の型情報を保持** できる
-- 「Day 2 のジェネリクス章への伏線」 として `<T>` を見せておくと良い
 
 ### 2. `BinaryOp`(関数型エイリアス)
 

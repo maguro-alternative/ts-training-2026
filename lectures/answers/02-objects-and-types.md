@@ -71,7 +71,7 @@ type Contact = WithName & WithEmail;
 const c: Contact = { name: "Taro", email: "taro@example.com" };
 ```
 
-`&`(intersection)で「両方のプロパティを持つ型」になる、を体感できればOK。
+`&`(intersection)で「両方のプロパティを持つ型」になる。
 
 ### 4. `totalPrice`
 
@@ -104,7 +104,7 @@ function totalPrice(order: Order): number {
 
 ### 1. `type` と `interface` の差を確認
 
-写経そのままなので答えは元のコード。 ただし以下の **動作確認ポイント** を講師が誘導:
+写経そのままなので答えは元のコード。
 
 ```ts
 // 同名 interface のマージで age が追加された後
@@ -120,7 +120,7 @@ type Card = { width: number };
 type Card = { height: number };  // ❌ 同名 type の再宣言はエラー
 ```
 
-→ 「ライブラリの型を拡張するときは `interface` が選ばれる理由」 として講師が補足するとよい。
+→ ライブラリの型を拡張するときは `interface` が選ばれる
 
 ### 2. インデックス署名
 
@@ -136,4 +136,3 @@ const s: number = scores.unknown_key;  // ⚠️ 実行時は undefined だが�
 - **任意の文字列キー** を許容するが、 **値の型は固定**(`number`)
 - 最後の例が **インデックス署名の落とし穴**: 存在しないキーへのアクセスも型上は通る
 - `tsconfig.json` で `noUncheckedIndexedAccess: true` を有効にすると、 `scores.unknown_key` の型が `number | undefined` になり安全になる
-- 「Day 2 の strict 章で扱う」と予告すればOK
