@@ -204,7 +204,8 @@ function route() {
   const parts = hash.split('/').filter(Boolean);
 
   if (parts[0] === 'lectures') {
-    renderLectures(parts[1]);
+    // `#/lectures/answers/<slug>` のようなネストパスをスラッシュ連結のまま渡す
+    renderLectures(parts.slice(1).join('/') || undefined);
     return;
   }
 

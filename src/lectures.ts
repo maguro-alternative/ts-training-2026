@@ -13,6 +13,13 @@ const lectureModules = import.meta.glob('../lectures/*.md', {
   eager: true,
 }) as Record<string, string>;
 
+// 演習の答えMD (lectures/answers/*.md)
+const answerModules = import.meta.glob('../lectures/answers/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
 // 受講者向けビューなので INSTRUCTOR.md は含めない
 const rootDocs = import.meta.glob('../README.md', {
   query: '?raw',
@@ -24,7 +31,7 @@ type Doc = {
   slug: string;
   title: string;
   content: string;
-  group: 'lecture' | 'meta';
+  group: 'lecture' | 'answer' | 'meta';
 };
 
 // "## 講師向けメモ" 以降のセクションを丸ごと落とす (受講者向けビューなので)
@@ -42,15 +49,23 @@ function buildDocs(): Doc[] {
     docs.push({ slug, title: extractTitle(content) ?? slug, content, group: 'lecture' });
   }
 
+  for (const [path, raw] of Object.entries(answerModules)) {
+    const content = stripInstructorNotes(raw);
+    const basename = path.replace(/^.*\//, '').replace(/\.md$/, '');
+    const slug = `answers/${basename}`;
+    docs.push({ slug, title: extractTitle(content) ?? basename, content, group: 'answer' });
+  }
+
   for (const [path, raw] of Object.entries(rootDocs)) {
     const content = stripInstructorNotes(raw);
     const slug = path.replace(/^.*\//, '').replace(/\.md$/, '').toLowerCase();
     docs.push({ slug, title: extractTitle(content) ?? slug, content, group: 'meta' });
   }
 
-  // slug の数字プレフィックスでソート (lecture は番号順、meta は最後)
+  // グループ順: lecture → answer → meta、 同グループ内は slug の昇順
+  const groupOrder: Record<Doc['group'], number> = { lecture: 0, answer: 1, meta: 2 };
   docs.sort((a, b) => {
-    if (a.group !== b.group) return a.group === 'lecture' ? -1 : 1;
+    if (a.group !== b.group) return groupOrder[a.group] - groupOrder[b.group];
     return a.slug.localeCompare(b.slug);
   });
 
@@ -101,6 +116,7 @@ export function renderLectures(slug: string | undefined) {
     <div class="lecture-layout">
       <aside class="lecture-sidebar">
         ${navItems('lecture', 'Day 1〜2 講義')}
+        ${navItems('answer', '演習の答え')}
         ${navItems('meta', 'リポジトリ説明')}
       </aside>
       <main class="lecture-content markdown-body">
