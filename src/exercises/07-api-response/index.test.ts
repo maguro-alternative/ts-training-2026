@@ -49,23 +49,15 @@ describe('07-api-response', () => {
   });
 
   it('SearchResponse: validation エラーに retryAfter は存在しない', () => {
+    // 過剰プロパティエラーが直下の行に現れるよう、 オブジェクトを1行で書く
     // @ts-expect-error: validation は retryAfter を持たない
-    const invalid: SearchResponse = {
-      status: 'error',
-      errorType: 'validation',
-      message: 'x',
-      retryAfter: 30,
-    };
+    const invalid: SearchResponse = { status: 'error', errorType: 'validation', message: 'x', retryAfter: 30 };
     expect(invalid).toBeDefined();
   });
 
   it('SearchResponse: server エラーは retryAfter が必須', () => {
     // @ts-expect-error: server は retryAfter が無いと不正
-    const invalid: SearchResponse = {
-      status: 'error',
-      errorType: 'server',
-      message: 'x',
-    };
+    const invalid: SearchResponse = { status: 'error', errorType: 'server', message: 'x' };
     expect(invalid).toBeDefined();
   });
 
