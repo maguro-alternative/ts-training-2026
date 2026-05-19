@@ -181,6 +181,7 @@ function double(x: unknown): number {
 // 3. strictNullChecks の感触をつかむ
 function greet(name: string | null): string {
   // return `Hello, ${name.toUpperCase()}!`;   // ❌ name が null かも
+  // nullだったらanonymousと出力
   /* TODO: ?. と ?? を使って書き直す */
   return /* TODO */;
 }
