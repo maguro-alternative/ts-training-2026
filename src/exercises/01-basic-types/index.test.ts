@@ -35,7 +35,7 @@ describe('01-basic-types', () => {
   });
 
   it('greet: ユーザー情報を含む文字列を返す', () => {
-    expect(greet({ name: 'Taro', age: 25 })).toBe('Hello, Taro! You are 25 years old.');
+    expect(greet({ name: 'Chihaya Kisaragi', age: 16 })).toBe('Hello, Chihaya Kisaragi! You are 16 years old.');
   });
 
   // ----------------------------------------------------------

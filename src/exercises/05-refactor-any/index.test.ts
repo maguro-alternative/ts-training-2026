@@ -23,10 +23,10 @@ describe('05-refactor-any', () => {
   it('totalPrice: 合計金額を返す', () => {
     expect(
       totalPrice([
-        { name: 'apple', price: 100, quantity: 2 },
-        { name: 'bread', price: 300, quantity: 1 },
+        { name: 'BEYBLADE X BX-00 ランダムブースター ライトニングエルドラゴ1-60F', price: 1600, quantity: 2 },
+        { name: '30MS 櫻木真乃 (20th Anniv. YOU AND アイ！)', price: 5060, quantity: 1 },
       ]),
-    ).toBe(500);
+    ).toBe(8260);
   });
 
   it('totalPrice: 型シグネチャが (CartItem[]) => number', () => {
@@ -44,13 +44,12 @@ describe('05-refactor-any', () => {
   it('adultsOnly: 18歳以上だけ残す', () => {
     expect(
       adultsOnly([
-        { name: 'a', age: 15 },
-        { name: 'b', age: 20 },
-        { name: 'c', age: 18 },
+        { name: 'Iori Minase', age: 15 },
+        { name: 'Ami Futami', age: 13 },
+        { name: 'Azusa Miura', age: 21 },
       ]),
     ).toEqual([
-      { name: 'b', age: 20 },
-      { name: 'c', age: 18 },
+      { name: 'Azusa Miura', age: 21 },
     ]);
   });
 
@@ -95,7 +94,7 @@ describe('05-refactor-any', () => {
   });
 
   it('parseCount: 不正な形なら 0', () => {
-    expect(parseCount('{"foo":1}')).toBe(0);
+    expect(parseCount('{"soredemo":"unicorn!!!!"}')).toBe(0);
     expect(parseCount('null')).toBe(0);
     expect(parseCount('"hello"')).toBe(0);
   });

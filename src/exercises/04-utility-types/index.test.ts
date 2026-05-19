@@ -33,8 +33,8 @@ describe('04-utility-types', () => {
   // createUser
   // ----------------------------------------------------------
   it('createUser: id 以外を受け取って User を作る', () => {
-    const u = createUser({ name: 'Taro', email: 't@example.com', age: 25 });
-    expect(u).toMatchObject({ name: 'Taro', email: 't@example.com', age: 25 });
+    const u = createUser({ name: 'Mirai Kasuga', email: 't@example.com', age: 14 });
+    expect(u).toMatchObject({ name: 'Mirai Kasuga', email: 't@example.com', age: 14 });
     expect(typeof u.id).toBe('string');
   });
 
@@ -42,9 +42,9 @@ describe('04-utility-types', () => {
     createUser({
       // @ts-expect-error: id はサーバーで振るので指定できない
       id: 'should-not-be-allowed',
-      name: 'Taro',
+      name: 'Mirai Kasuga',
       email: 't@example.com',
-      age: 25,
+      age: 14,
     });
     expect(true).toBe(true);
   });
@@ -53,13 +53,13 @@ describe('04-utility-types', () => {
   // updateUser
   // ----------------------------------------------------------
   it('updateUser: 一部のプロパティだけ更新できる', () => {
-    const user: User = { id: 'u1', name: 'Taro', email: 't@example.com', age: 25 };
-    const updated = updateUser(user, { age: 26 });
-    expect(updated).toEqual({ id: 'u1', name: 'Taro', email: 't@example.com', age: 26 });
+    const user: User = { id: 'u1', name: 'Mirai Kasuga', email: 't@example.com', age: 14 };
+    const updated = updateUser(user, { age: 15 });
+    expect(updated).toEqual({ id: 'u1', name: 'Mirai Kasuga', email: 't@example.com', age: 15 });
   });
 
   it('updateUser: id を patch に含めるとコンパイルエラー', () => {
-    const user: User = { id: 'u1', name: 'Taro', email: 't@example.com', age: 25 };
+    const user: User = { id: 'u1', name: 'Mirai Kasuga', email: 't@example.com', age: 14 };
     // @ts-expect-error: id は変更不可
     updateUser(user, { id: 'u2' });
     expect(true).toBe(true);
