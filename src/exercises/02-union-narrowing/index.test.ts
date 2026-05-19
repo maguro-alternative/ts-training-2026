@@ -41,7 +41,9 @@ describe('02-union-narrowing', () => {
   });
 
   it('isCat: 型ガードとして働く (animal is Cat を返す)', () => {
-    const animal: Cat | Dog = { name: 'Tama', purrs: true };
+    // 関数経由で Cat | Dog を得ることで、TS の初期化子 narrowing を抑える
+    const makeAnimal = (): Cat | Dog => ({ name: 'Tama', purrs: true });
+    const animal: Cat | Dog = makeAnimal();
     if (isCat(animal)) {
       // ここで Cat に絞り込めていれば purrs にアクセスできる
       expectTypeOf(animal).toEqualTypeOf<Cat>();
