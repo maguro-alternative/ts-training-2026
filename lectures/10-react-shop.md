@@ -498,6 +498,96 @@ function Header({
 }
 ```
 
+カート画面についても同じように、1行分の `CartRow` と画面全体の `CartView` に分けます。
+
+```tsx
+function CartRow({
+  product,
+  quantity,
+  onQuantityChange,
+}: {
+  product: Product;
+  quantity: number;
+  onQuantityChange: (productId: string, qty: number) => void;
+}) {
+  return (
+    <div className="flex items-center gap-3 border-b border-gray-200 py-2">
+      <img src={product.imageUrl} alt={product.name} className="w-16 h-16" />
+      <div className="flex-1">
+        <h3 className="font-bold">{product.name}</h3>
+        <p>¥{product.price}</p>
+      </div>
+      <input
+        type="number"
+        min={0}
+        value={quantity}
+        onChange={(e) => onQuantityChange(product.id, Number(e.target.value))}
+        className="w-16 px-2 py-1 border border-gray-300 rounded"
+      />
+      <p className="w-20 text-right">¥{product.price * quantity}</p>
+      <button
+        onClick={() => onQuantityChange(product.id, 0)}
+        className="px-2 py-1 text-red-500 hover:bg-red-50 rounded"
+      >
+        削除
+      </button>
+    </div>
+  );
+}
+
+function CartView({
+  cart,
+  products,
+  onQuantityChange,
+}: {
+  cart: Cart;
+  products: Product[];
+  onQuantityChange: (productId: string, qty: number) => void;
+}) {
+  // cart は { productId: 数量 } の形なので、商品データと突き合わせる
+  const entries = Object.entries(cart);
+  const total = entries.reduce((sum, [productId, qty]) => {
+    const product = products.find((p) => p.id === productId);
+    return sum + (product ? product.price * qty : 0);
+  }, 0);
+
+  if (entries.length === 0) {
+    return <p className="text-gray-500">カートは空です</p>;
+  }
+
+  return (
+    <div>
+      {entries.map(([productId, qty]) => {
+        const product = products.find((p) => p.id === productId);
+        if (!product) return null;
+        return (
+          <CartRow
+            key={productId}
+            product={product}
+            quantity={qty}
+            onQuantityChange={onQuantityChange}
+          />
+        );
+      })}
+      <div className="flex justify-end py-2 font-bold">合計: ¥{total}</div>
+    </div>
+  );
+}
+```
+
+`App` 側では `view` state を見て `ProductList` と `CartView` を出し分けます。`onQuantityChange` には先ほど定義した `setQuantity` をそのまま渡せばOKです。
+
+```tsx
+<main className="p-4">
+  {view === "cart" ? (
+    <CartView cart={cart} products={products} onQuantityChange={setQuantity} />
+  ) : (
+    // 商品一覧の表示
+    ...
+  )}
+</main>
+```
+
 ## よく詰まるポイント
 - **「リストに `key` を付けて」警告**: `map` のJSXに `key={product.id}` を付ける
 - **`onChange` で TypeScript エラー**: `e.target.value` の型が分からないとき → `React.ChangeEvent<HTMLInputElement>`を調べる
