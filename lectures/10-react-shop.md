@@ -575,17 +575,54 @@ function CartView({
 }
 ```
 
-`App` 側では `view` state を見て `ProductList` と `CartView` を出し分けます。`onQuantityChange` には先ほど定義した `setQuantity` をそのまま渡せばOKです。
+分割後の `App` 全体は以下のようになります。 state と派生値、ハンドラを定義して、 各コンポーネントの props にそのまま渡しているだけです。
+
+子コンポーネントの `onSearchChange` には `useState` の setter `setSearchQuery` を、 `onQuantityChange` には自前で定義した `setQuantity` を渡します。 props 名(`on〜`)はあくまで子側の呼び名で、 実体は App 側の関数です。
 
 ```tsx
-<main className="p-4">
-  {view === "cart" ? (
-    <CartView cart={cart} products={products} onQuantityChange={setQuantity} />
-  ) : (
-    // 商品一覧の表示
-    ...
-  )}
-</main>
+function App() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [cart, setCart] = useState<Cart>({});
+  const [view, setView] = useState<"products" | "cart">("products");
+
+  // state から派生する値
+  const cartCount = Object.values(cart).reduce((sum, q) => sum + q, 0);
+  const filtered = products.filter((p) =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // カート操作のハンドラ
+  const addToCart = (productId: string) => {
+    setCart({ ...cart, [productId]: (cart[productId] ?? 0) + 1 });
+  };
+
+  const setQuantity = (productId: string, qty: number) => {
+    if (qty <= 0) {
+      const { [productId]: _, ...rest } = cart;
+      setCart(rest);
+    } else {
+      setCart({ ...cart, [productId]: qty });
+    }
+  };
+
+  return (
+    <div>
+      <Header
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        cartCount={cartCount}
+        onToggleView={() => setView(view === "products" ? "cart" : "products")}
+      />
+      <main className="p-4">
+        {view === "cart" ? (
+          <CartView cart={cart} products={products} onQuantityChange={setQuantity} />
+        ) : (
+          <ProductList products={filtered} onAddToCart={addToCart} />
+        )}
+      </main>
+    </div>
+  );
+}
 ```
 
 ## よく詰まるポイント
